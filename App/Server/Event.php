@@ -1,11 +1,8 @@
 <?php
 namespace App\Server;
 
-use Swoole\Table;
 use App\Server\Stream;
-use Swim\Harbor\Cargo;
 use Swim\Harbor\Crate;
-use App\Server\Connection;
 use Swoole\WebSocket\Frame;
 use Swoole\Websocket\Server;
 
