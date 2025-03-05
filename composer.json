@@ -1,0 +1,23 @@
+{
+    "name": "chat/server",
+    "description": "websocket server for chatting reason",
+    "type": "project",
+    "license": "mit",
+    "autoload": {
+        "psr-4": {
+            "Chat\\Server\\": "src/",
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Effendi Saputra",
+            "email": "effendi.saputra01@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "swim/harbor": "dev-master",
+        "vlucas/phpdotenv": "^5.6@dev"
+    }
+}
