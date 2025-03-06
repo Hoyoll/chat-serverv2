@@ -13,25 +13,42 @@ class Channel
     public function __invoke(
         Server $server, 
         Frame $frame, 
-        string $event) 
+        object $message) 
     {
-        switch ($event) {
-            case 'join':
-                $this->addUsers($frame->fd);
-                $this->push($server, "welcome $frame->fd!");
-                break;
-            case 'leave':
-                $this->rmUser($frame->fd);
-                break;
-            case 'chatting':
-                $this->push($server, $frame->data);
-                break;
-        }
+        ($this->event->get($message->header ?? ''))(...[$server, $frame]);
     }
 
     public function __construct() 
     {
-        $this->members = [];    
+        $this->members = [];
+        $this->event = Crate::new();
+        $this->listen();
+    }
+    private function listen(): void 
+    {
+        $this->event
+            ->store('join', function (Server $server, Frame $frame) 
+            {
+                $this->addUsers($frame->fd);
+                $this->push($server, "welcome $frame->fd!");
+            })
+
+            ->store('chatting', function (Server $server, Frame $frame) 
+            {
+                $this->push($server, $frame->data);
+            })
+
+            ->store('leave', function (Server $server, Frame $frame) 
+            {
+                $this->rmUser($frame->fd);
+            })
+
+            ->catch(function (Server $server, Frame $frame) 
+            {
+                $server->push($frame->fd, json_encode([
+                    'message' => 'Incorrect Header!'
+                ]));
+            });        
     }
 
     public function addUsers(int $fd): void

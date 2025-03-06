@@ -22,10 +22,12 @@ class Stream
     private static function make() 
     {
         self::$channels = Crate::new();
-        self::$channels->catch(function (Server $server, Frame $frame, string $event) {
+        self::$channels->catch(function (Server $server, Frame $frame, object $message) 
+        {
             $server->push($frame->fd, json_encode([
                 'message' => 'Channel did not exist!'
             ]));
         });
     }
 }
+//ws://127.0.0.1:6967
